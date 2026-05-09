@@ -1,8 +1,4 @@
-#define _POSIX_C_SOURCE 200809L // Pour enlever les erreurs avec sigaction incomplet
 #include <stdio.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
 #include "term_functions.h"
 // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
