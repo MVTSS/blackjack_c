@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L // Pour enlever les erreurs avec sigaction incomplet
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -13,12 +14,11 @@
 
 int money;
 
-
-
 void redirect(int signum) { // si Ctrl + C pour sortir
     if (signum == SIGINT) {
         term_clear();
         term_restore();
+	save_encrypted("./blackjack_bank", &money, sizeof(money));
         printf("Money in bank : %d$\n", money);
         puts("See you soon !");
         exit(0);
@@ -37,13 +37,15 @@ void _init_signal(void) {
 }
 
 
+void start_game(void) {
+    start(&money);
 
+}
 
 
 
 int main() {
     _init_signal();
-    term_init();
 
     char *fname = "./blackjack_bank";
     load_encrypted(fname, &money);
@@ -54,18 +56,18 @@ int main() {
     char selection;
     while (selection != 'q')
     {
-        menu(&selection);
+	term_init();
+        menu(&selection, money);
         term_move(LIGNE_DEBUG_ERROR, 1);
-        // printf("DEBUG : char : %c\n", selection);
+        printf("DEBUG : char : %c\n", selection);
 
         switch (selection)
         {
         case 'H':
             help();
-            term_clear();
             break;
         case 'S':
-            // Start game
+	    start_game();
             break;
         default:
             puts("Commande inconnu, veuillez réessayer");
