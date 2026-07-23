@@ -11,6 +11,10 @@
 #define MENU_LIGNE_INPUT   8
 
 
+
+
+
+
 void init_display(int avail_money) {
     term_clear();
     term_move(MENU_LIGNE_TITRE,  1); printf("=== MATIS' BLACKJACK ===");
