@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "functions.h"
 #include "term_functions.h"
 
@@ -66,15 +67,18 @@ char bj_round(int* round_bet, int* money) {
 }
 
 void start(int* money) {
-    int bet;
     char play_again = 'y';
+    int bet;
 
     init_display(*money);
 
     while (play_again != 'n') {
 	term_move(MENU_LIGNE_INPUT, 1); printf("How much do you wanna bet ? : ");
 	scanf("%d", &bet);
-	play_again = bj_round(&bet, money);
+
+    if (bet > 0 && bet <= *money) { play_again = bj_round(&bet, money); } 
+    else { printf("\nError : not enough money in bank, quitting\n"); sleep(2); play_again = 'n'; }
+    
     }
 }
 

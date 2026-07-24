@@ -56,7 +56,7 @@ int main() {
     char selection;
     while (selection != 'q')
     {
-	term_init();
+	    term_init();
         menu(&selection, money);
         term_move(LIGNE_DEBUG_ERROR, 1);
         printf("DEBUG : char : %c\n", selection);
