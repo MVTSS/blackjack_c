@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
-#include "functions.h"
+#include "deck.h"
 #include "term_functions.h"
+#include "functions.h"
 
 
 #define MENU_LIGNE_TITRE  1
@@ -10,9 +11,6 @@
 #define MENU_LIGNE_AIDE   5
 #define MENU_LIGNE_QUIT   6
 #define MENU_LIGNE_INPUT   8
-
-
-
 
 
 
@@ -52,14 +50,17 @@ void help(void) {
 }
 
 
-char bj_round(int* round_bet, int* money) {
+char bj_round(int* round_bet, int* money, Deck* deck) {
     char play_again;
     *money -= *round_bet;
     term_clear();
     init_display(*money);
 
     // Game...
-    printf("GAME\n");
+    printf("\nGAME\n");
+    printf("Deck (%d cards left)\n", deck->nb_cards);
+    Card test_card = getRandomCard(deck);
+    printf("Took a card ! : (value : %d, suit : %d)", test_card.value, test_card.suit);
     wait_keypress();
 
     printf("Wanna play again fella ? (Y/n) : "); play_again = term_getchar();
@@ -69,6 +70,8 @@ char bj_round(int* round_bet, int* money) {
 void start(int* money) {
     char play_again = 'y';
     int bet;
+    Deck deck;
+    createDeck(&deck);
 
     init_display(*money);
 
@@ -76,8 +79,11 @@ void start(int* money) {
 	term_move(MENU_LIGNE_INPUT, 1); printf("How much do you wanna bet ? : ");
 	scanf("%d", &bet);
 
-    if (bet > 0 && bet <= *money) { play_again = bj_round(&bet, money); } 
-    else { printf("\nError : not enough money in bank, quitting\n"); sleep(2); play_again = 'n'; }
+    if (bet > 0 && bet <= *money)
+	    play_again = bj_round(&bet, money, &deck);
+    else { 
+	printf("\nError : not enough money in bank, quitting\n"); sleep(2); play_again = 'n'; 
+    }
     
     }
 }

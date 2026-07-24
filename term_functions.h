@@ -1,11 +1,6 @@
 #ifndef TERM_H
 #define TERM_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
 void term_init(void);
 void term_restore(void);
 

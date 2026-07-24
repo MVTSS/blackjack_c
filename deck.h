@@ -1,10 +1,6 @@
-#ifndef TERM_H
-#define TERM_H
+#ifndef DECK_H
+#define DECK_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 typedef enum {
     heart,
@@ -25,12 +21,17 @@ typedef struct {
     int nb_cards;
 } Deck;
 
-void createDeck(Deck *deck);
-void turnCard(Card *carte);
-Card getCard(Deck *deck);
+void createDeck(Deck* deck);
+void turnCard(Card* carte);
+void removeCard(Deck* deck, int index);
+Card getRandomCard(Deck* deck);
 
-void shuffle_deck(Deck *deck);
 
-int isDeckEmpty(Deck *deck);
+// Since we get random cards already, there's not a use for shuffling the deck yet.
+// Depends on the future implementation if we're rigorous.
+//
+//void shuffle_deck(Deck *deck);
+
+int isDeckEmpty(Deck* deck);
 
 #endif

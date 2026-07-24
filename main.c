@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "term_functions.h"
 #include "functions.h"
 #include "save_load.h"
@@ -46,6 +47,7 @@ void start_game(void) {
 
 int main() {
     _init_signal();
+    srand(time(NULL));
 
     char *fname = "./blackjack_bank";
     load_encrypted(fname, &money);
@@ -56,7 +58,7 @@ int main() {
     char selection;
     while (selection != 'q')
     {
-	    term_init();
+	term_init();
         menu(&selection, money);
         term_move(LIGNE_DEBUG_ERROR, 1);
         printf("DEBUG : char : %c\n", selection);
