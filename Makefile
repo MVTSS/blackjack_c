@@ -5,8 +5,8 @@ LDFLAGS = -lssl -lcrypto
 
 all: blackjack init_money
 
-blackjack: main.o term.o func.o saveload.o deck.o 
-	$(CC) $(CFLAGS) -o blackjack main.o term.o func.o saveload.o deck.o $(LDFLAGS)
+blackjack: main.o term.o func.o saveload.o deck.o player.o
+	$(CC) $(CFLAGS) -o blackjack main.o term.o func.o saveload.o deck.o player.o $(LDFLAGS)
 
 init_money: init_money.o saveload.o
 	$(CC) $(CFLAGS) -o init_money init_money.o saveload.o $(LDFLAGS)
@@ -25,6 +25,9 @@ func.o: functions.c functions.h
 
 deck.o: deck.c deck.h
 	$(CC) $(CFLAGS) -c deck.c -o deck.o
+
+deck.o: player.c player.h
+	$(CC) $(CFLAGS) -c player.c -o player.o
 
 saveload.o: save_load.c save_load.h
 	$(CC) $(CFLAGS) -c save_load.c -o saveload.o

@@ -32,6 +32,7 @@ Card getRandomCard(Deck* deck);
 //
 //void shuffle_deck(Deck *deck);
 
+char* toStringCard(int cardIdx, int suitIdx);
 int isDeckEmpty(Deck* deck);
 
 #endif

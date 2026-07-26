@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "deck.h"
 
@@ -50,6 +51,18 @@ Card getRandomCard(Deck *deck) {
 
     return to_get;
 }
+
+
+char* toStringCard(int cardIdx, int suitIdx) {
+    char* cardString = malloc(10*sizeof(char));
+    char* suits[] = { "♥", "♦", "♣", "♠" };
+    char *values[] = {"NULL","A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+
+    snprintf(cardString, 10, "%s%s", values[cardIdx], suits[suitIdx]);
+
+    return cardString;
+}
+
 
 int isDeckEmpty(Deck *deck) {
     return deck->nb_cards == 0;
