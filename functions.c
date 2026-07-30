@@ -7,6 +7,7 @@
 
 #define MENU_LIGNE_TITRE  1
 #define MENU_LIGNE_MONEY  2
+#define MENU_LIGNE_DECK   3
 #define MENU_LIGNE_START  4
 #define MENU_LIGNE_AIDE   5
 #define MENU_LIGNE_QUIT   6
@@ -24,6 +25,11 @@ void init_display(int avail_money) {
     term_clear();
     term_move(MENU_LIGNE_TITRE,  1); printf("=== MATIS' BLACKJACK ===");
     term_move(MENU_LIGNE_MONEY,  1); printf("Argent disponible : %d$", avail_money);
+}
+
+void init_display_game(int avail_money, Deck* deck) {
+    init_display(avail_money);
+    term_move(MENU_LIGNE_DECK,  1); printf("Deck (%d cards left)\n", deck->nb_cards);
 }
 
 
@@ -59,11 +65,8 @@ void help(void) {
 char bj_round(int* round_bet, int* money, Deck* deck) {
     char play_again;
     *money -= *round_bet;
-    term_clear();
-    init_display(*money);
+    init_display_game(*money, deck);
 
-    printf("\nGAME\n");
-    printf("Deck (%d cards left)\n", deck->nb_cards);
     //Card test_card = getRandomCard(deck);
     //char* cardString = toStringCard(test_card.value, test_card.suit);
     //printf("Took a card ! : (value : %d, suit : %d) and string form : %s", test_card.value, test_card.suit, cardString);
@@ -72,10 +75,11 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
     term_move(INDICATION_LINE,1); printf("Press enter to continue...");
     Card pulled_card = getRandomCard(deck);
     char* str_card = toStringCard(pulled_card.value, pulled_card.suit);
-    term_move(DEALER_LINE,1); printf("Dealer : %s", toStringCard(pulled_card.value, pulled_card.suit));
+    term_move(DEALER_LINE,1); printf("Dealer : %s", str_card);
     wait_keypress();
     pulled_card = getRandomCard(deck);
-    term_move(PLAYER_LINE,1); printf("Player : %s", toStringCard(pulled_card.value, pulled_card.suit));
+    str_card = toStringCard(pulled_card.value, pulled_card.suit);
+    term_move(PLAYER_LINE,1); printf("Player : %s", str_card);
 
     
 
@@ -88,18 +92,22 @@ void start(int* money) {
     int bet;
     Deck deck;
     createDeck(&deck);
+    
 
-    init_display(*money);
+    
 
     while (play_again != 'n' && deck.nb_cards > 45) {
-	term_move(MENU_LIGNE_INPUT, 1); printf("How much do you wanna bet ? : ");
-	scanf("%d", &bet);
+        init_display_game(*money, &deck);
+	    term_move(MENU_LIGNE_INPUT, 1); printf("How much do you wanna bet ? : ");
+	    scanf("%d", &bet);
 
-	if (bet > 0 && bet <= *money)
-	    play_again = bj_round(&bet, money, &deck);
-	else { 
-	    printf("\nError : not enough money in bank, quitting\n"); sleep(2); play_again = 'n'; 
-	}
+        if (bet > 0 && bet <= *money) {
+            play_again = bj_round(&bet, money, &deck);
+        }
+
+        else { 
+            printf("\nError : not enough money in bank, quitting\n"); sleep(2); play_again = 'n'; 
+        }
     
     }
 
