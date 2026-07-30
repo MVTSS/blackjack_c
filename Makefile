@@ -26,7 +26,7 @@ func.o: functions.c functions.h
 deck.o: deck.c deck.h
 	$(CC) $(CFLAGS) -c deck.c -o deck.o
 
-deck.o: player.c player.h
+player.o: player.c player.h
 	$(CC) $(CFLAGS) -c player.c -o player.o
 
 saveload.o: save_load.c save_load.h
