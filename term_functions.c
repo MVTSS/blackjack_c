@@ -3,13 +3,14 @@
 // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
 
-void term_move(int ligne, int col) { printf("\033[%d;%dH", ligne, col); }
+void term_move(int line, int col) { printf("\033[%d;%dH", line, col); }
 
 void term_hide_cursor(void) { printf("\033[?25l"); }
 void term_show_cursor(void) { printf("\033[?25h"); }
 
 void term_clear(void)      { printf("\033[2J\033[H"); }
-void term_clear_line(void) { printf("\033[2K"); }
+void term_clear_actual_line(void) { printf("\033[2K"); }
+void term_clear_line(int line) { term_move(line, 1); printf("\033[2K"); }
 void term_flush(void)      { fflush(stdout); }
 
 char term_getchar(void) { return getchar(); }

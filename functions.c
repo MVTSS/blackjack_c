@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <unistd.h>
 #include "deck.h"
 #include "term_functions.h"
 #include "functions.h"
@@ -13,8 +11,11 @@
 #define MENU_LIGNE_QUIT   6
 #define MENU_LIGNE_INPUT   8
 
-#define INDICATION_LINE 10
+#define WHATTODO_LINE 10
+#define INDICATION_LINE 12
 
+
+#define DECK_LINE 3
 #define DEALER_LINE 6
 #define PLAYER_LINE 8
 
@@ -40,46 +41,101 @@ void menu(char *selection, int avail_money) {
     term_move(MENU_LIGNE_AIDE,   1); printf("H: Menu d'aide");
     term_move(MENU_LIGNE_QUIT,   1); printf("q: Quit");
     term_move(MENU_LIGNE_INPUT,   1); printf("Séléction : "); *selection = term_getchar();
-    term_clear_line();
+    term_clear_actual_line();
     term_flush();
 }
 
 
 void help(void) {
     term_clear();
-    term_move(1,1); printf("=== RÈGLES DU BLACK JACK ===");
-    term_move(2,1); printf("1. Blablabla bla");
-    term_move(3,1); printf("blablablabla blablabla blabla blablabla");
-    term_move(4,1); printf("blabla blablabla blablablablablabla blablabla blablabla blabla");
-    term_move(5,1); printf("blablabla blablablabla blabla blablablabla blablabla blabla");
-    term_move(6,1); printf("blablabla blablablabla blabla blabla blabla");
-    term_move(7,1); printf("blablabla blablabla blabla blablablabla blablabla blabla");
-    term_move(8,1); printf("blablabla blablablabla blabla blabla");
-    term_move(9,1); printf("blablabla bla blablablabla blablabla blabla");
-    term_move(11,1); printf("Appuyer sur entrer pour retourner au menu...");
+    term_move(1,1); printf("=== RÈGLES DU BLACK JACK ===\n");
+    printf("1. Blablabla bla\n");
+    printf("blablablabla blablabla blabla blablabla\n");
+    printf("blabla blablabla blablablablablabla blablabla blablabla blabla\n");
+    printf("blablabla blablablabla blabla blablablabla blablabla blabla\n");
+    printf("blablabla blablablabla blabla blabla blabla\n");
+    printf("blablabla blablabla blabla blablablabla blablabla blabla\n");
+    printf("blablabla blablablabla blabla blabla\n");
+    printf("blablabla bla blablablabla blablabla blabla\n");
+    printf("\nAppuyer sur entrer pour retourner au menu...\n");
     wait_keypress();
     term_clear();
 }
 
 
-char bj_round(int* round_bet, int* money, Deck* deck) {
-    char play_again;
-    *money -= *round_bet;
-    init_display_game(*money, deck);
+void update_deck_card_nb(int card_nb) {
+    term_move(DECK_LINE,  1); printf("\nDeck (%d cards left)\n", card_nb);
+}
 
+void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand, int* nb_card_in_deck) {
+    if (*nb_cards_in_hand == 0) {
+        strcat(str_cards, toStringCard(c.value, c.suit));
+    } else {
+        strcat(str_cards, ", ");
+        strcat(str_cards, toStringCard(c.value, c.suit));
+    }
+
+    (*nb_cards_in_hand)++;
+    (*nb_card_in_deck)--;
+    
+    printf("%s\r", str_cards);
+}
+
+
+char dealer_cards[64] = "Dealer : ";
+int nb_dealer_card = 0;
+char player_cards[64] = "Player : ";
+int nb_player_card = 0;
+
+char bj_round(int* round_bet, int* money, Deck* deck) {
+    char play_again;  
+    char move;
+    *money -= *round_bet;
+    term_clear();
+    init_display(*money);
+    update_deck_card_nb(deck->nb_cards);
     //Card test_card = getRandomCard(deck);
     //char* cardString = toStringCard(test_card.value, test_card.suit);
     //printf("Took a card ! : (value : %d, suit : %d) and string form : %s", test_card.value, test_card.suit, cardString);
     //free(cardString);
      
     term_move(INDICATION_LINE,1); printf("Press enter to continue...");
+    // Dealer turns
     Card pulled_card = getRandomCard(deck);
-    char* str_card = toStringCard(pulled_card.value, pulled_card.suit);
-    term_move(DEALER_LINE,1); printf("Dealer : %s", str_card);
+    term_move(DEALER_LINE,1);
+    add_card_entity(pulled_card, dealer_cards, &nb_dealer_card, &deck->nb_cards);
+    update_deck_card_nb(deck->nb_cards);
+    
     wait_keypress();
+
     pulled_card = getRandomCard(deck);
-    str_card = toStringCard(pulled_card.value, pulled_card.suit);
-    term_move(PLAYER_LINE,1); printf("Player : %s", str_card);
+    term_move(PLAYER_LINE,1);
+    add_card_entity(pulled_card, player_cards, &nb_player_card, &deck->nb_cards);
+    update_deck_card_nb(deck->nb_cards);
+
+    wait_keypress();
+
+    pulled_card = getRandomCard(deck);
+    term_move(PLAYER_LINE,1);
+    add_card_entity(pulled_card, player_cards, &nb_player_card, &deck->nb_cards);
+    update_deck_card_nb(deck->nb_cards);
+
+
+    term_move(WHATTODO_LINE,1);
+    printf("\nWHAT TO DO ? (H)it, (C)heck : "); move = term_getchar();
+    while (move == 'H')
+    {
+        term_clear_line(WHATTODO_LINE);
+        wait_keypress();
+        pulled_card = getRandomCard(deck);
+        term_move(PLAYER_LINE,1);
+        add_card_entity(pulled_card, player_cards, &nb_player_card,&deck->nb_cards);
+        update_deck_card_nb(deck->nb_cards);
+        term_move(WHATTODO_LINE,1);
+        printf("\nWHAT TO DO ? (H)it, (C)heck : "); move = term_getchar();
+    }
+    
+
 
     
 

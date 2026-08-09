@@ -9,7 +9,8 @@ void term_hide_cursor(void);
 void term_show_cursor(void);
 
 void term_clear(void);
-void term_clear_line(void);
+void term_clear_actual_line(void);
+void term_clear_line(int line);
 void term_flush(void);
 
 char term_getchar(void);
