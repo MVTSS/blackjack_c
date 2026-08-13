@@ -13,13 +13,13 @@
 
 
 
-int money;
+int money = 100;
 
 void redirect(int signum) { // si Ctrl + C pour sortir
     if (signum == SIGINT) {
         term_clear();
         term_restore();
-	save_encrypted("./blackjack_bank", &money, sizeof(money));
+        save_encrypted("./blackjack_bank", &money, sizeof(money));
         printf("Money in bank : %d$\n", money);
         puts("See you soon !");
         exit(0);
@@ -50,15 +50,15 @@ int main() {
     srand(time(NULL));
 
     char *fname = "./blackjack_bank";
-    load_encrypted(fname, &money);
-
-
+    if (!load_encrypted(fname, &money)) {
+        money = 100;
+    }
 
     // while menu
-    char selection;
+    char selection = '\0';
     while (selection != 'q')
     {
-	term_init();
+        term_init();
         menu(&selection, money);
         term_move(LIGNE_DEBUG_ERROR, 1);
         printf("DEBUG : char : %c\n", selection);
@@ -66,17 +66,22 @@ int main() {
         switch (selection)
         {
         case 'H':
+        case 'h':
             help();
             break;
         case 'S':
-	    start_game();
+        case 's':
+            start_game();
+            break;
+        case 'q':
             break;
         default:
-            puts("Commande inconnu, veuillez réessayer");
+            puts("Commande inconnue, veuillez réessayer");
             break;
         }
     }
 
-    redirect(SIGINT);
+    term_restore();
+    save_encrypted(fname, &money, sizeof(money));
     return 0;
 }

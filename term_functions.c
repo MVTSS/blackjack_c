@@ -30,8 +30,10 @@ void _term_restore_buffer(void) {
 
 
 void wait_keypress(void) {
-    while (getchar() != '\n');
-    getchar();
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {
+        /* vide le buffer jusqu'au retour à la ligne */
+    }
 }
 
 

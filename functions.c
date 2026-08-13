@@ -35,12 +35,25 @@ void init_display_game(int avail_money, Deck* deck) {
 
 
 void menu(char *selection, int avail_money) {
+    int input;
+
     term_move(MENU_LIGNE_TITRE,  1); printf("=== MATIS' BLACKJACK ===");
     term_move(MENU_LIGNE_MONEY,  1); printf("Argent disponible : %d$", avail_money);
     term_move(MENU_LIGNE_START, 1); printf("S: Commencer une partie");
     term_move(MENU_LIGNE_AIDE,   1); printf("H: Menu d'aide");
     term_move(MENU_LIGNE_QUIT,   1); printf("q: Quit");
-    term_move(MENU_LIGNE_INPUT,   1); printf("Séléction : "); *selection = term_getchar();
+
+    do {
+        term_move(MENU_LIGNE_INPUT, 1);
+        printf("Selection : ");
+        term_flush();
+        input = getchar();
+        while (input == '\n' || input == '\r') {
+            input = getchar();
+        }
+    } while (input == EOF);
+
+    *selection = (char)input;
     term_clear_actual_line();
     term_flush();
 }
@@ -67,7 +80,7 @@ void update_deck_card_nb(int card_nb) {
     term_move(DECK_LINE,  1); printf("\nDeck (%d cards left)\n", card_nb);
 }
 
-void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand, int* nb_card_in_deck) {
+void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand) {
     if (*nb_cards_in_hand == 0) {
         strcat(str_cards, toStringCard(c.value, c.suit));
     } else {
@@ -76,8 +89,6 @@ void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand, int* nb_car
     }
 
     (*nb_cards_in_hand)++;
-    (*nb_card_in_deck)--;
-    
     printf("%s\r", str_cards);
 }
 
@@ -87,9 +98,17 @@ int nb_dealer_card = 0;
 char player_cards[64] = "Player : ";
 int nb_player_card = 0;
 
+static void reset_round_state(void) {
+    snprintf(dealer_cards, sizeof(dealer_cards), "Dealer : ");
+    snprintf(player_cards, sizeof(player_cards), "Player : ");
+    nb_dealer_card = 0;
+    nb_player_card = 0;
+}
+
 char bj_round(int* round_bet, int* money, Deck* deck) {
     char play_again;  
     char move;
+    reset_round_state();
     *money -= *round_bet;
     term_clear();
     init_display(*money);
@@ -103,21 +122,21 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
     // Dealer turns
     Card pulled_card = getRandomCard(deck);
     term_move(DEALER_LINE,1);
-    add_card_entity(pulled_card, dealer_cards, &nb_dealer_card, &deck->nb_cards);
+    add_card_entity(pulled_card, dealer_cards, &nb_dealer_card);
     update_deck_card_nb(deck->nb_cards);
     
     wait_keypress();
 
     pulled_card = getRandomCard(deck);
     term_move(PLAYER_LINE,1);
-    add_card_entity(pulled_card, player_cards, &nb_player_card, &deck->nb_cards);
+    add_card_entity(pulled_card, player_cards, &nb_player_card);
     update_deck_card_nb(deck->nb_cards);
 
     wait_keypress();
 
     pulled_card = getRandomCard(deck);
     term_move(PLAYER_LINE,1);
-    add_card_entity(pulled_card, player_cards, &nb_player_card, &deck->nb_cards);
+    add_card_entity(pulled_card, player_cards, &nb_player_card);
     update_deck_card_nb(deck->nb_cards);
 
 
@@ -129,7 +148,7 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
         wait_keypress();
         pulled_card = getRandomCard(deck);
         term_move(PLAYER_LINE,1);
-        add_card_entity(pulled_card, player_cards, &nb_player_card,&deck->nb_cards);
+        add_card_entity(pulled_card, player_cards, &nb_player_card);
         update_deck_card_nb(deck->nb_cards);
         term_move(WHATTODO_LINE,1);
         printf("\nWHAT TO DO ? (H)it, (C)heck : "); move = term_getchar();
