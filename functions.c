@@ -124,20 +124,22 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
     //free(cardString);
      
     term_move(INDICATION_LINE,1); printf("%s", lang->game_press_enter);
+    term_flush();
+
     // Dealer turns
     Card pulled_card = getRandomCard(deck);
     term_move(DEALER_LINE,1);
     add_card_entity(pulled_card, dealer_cards, &nb_dealer_card);
     update_deck_card_nb(deck->nb_cards);
     
-    wait_keypress();
+    term_getchar();
 
     pulled_card = getRandomCard(deck);
     term_move(PLAYER_LINE,1);
     add_card_entity(pulled_card, player_cards, &nb_player_card);
     update_deck_card_nb(deck->nb_cards);
 
-    wait_keypress();
+    term_getchar();
 
     pulled_card = getRandomCard(deck);
     term_move(PLAYER_LINE,1);
@@ -181,6 +183,7 @@ void start(int* money) {
         init_display_game(*money, &deck);
 	    term_move(MENU_LIGNE_INPUT, 1); printf("%s", lang->game_how_much_bet);
 	    scanf("%d", &bet);
+        wait_keypress();
 
         if (bet > 0 && bet <= *money) {
             play_again = bj_round(&bet, money, &deck);
