@@ -1,0 +1,28 @@
+{
+  "menu": {
+    "title": "=== MATIS' BLACKJACK ===",
+    "available_money": "Argent disponible : %d$",
+    "start_game": "S: Commencer une partie",
+    "help": "H: Menu d'aide",
+    "quit": "q: Quit",
+    "change_lang": "l: Changer la langue",
+    "selection": "Selection : "
+  },
+  "help": {
+    "title": "=== RÈGLES DU BLACK JACK ===",
+    "rules_line1": "1. Blablabla bla\nblablablabla blablabla blabla blablabla\nblabla blablabla blablablablablabla blablabla blablabla blabla\nblablabla blablablabla blabla blablablabla blablabla blabla\nblablabla blablablabla blabla blabla blabla\nblablabla blablabla blabla blablablabla blablabla blabla\nblablabla blablablabla blabla blabla\nblablabla bla blablablabla blablabla blabla",
+    "press_enter": "Appuyer sur entrer pour retourner au menu..."
+  },
+  "game": {
+    "deck_info": "Deck (%d cards left)\n",
+    "how_much_bet": "How much do you wanna bet ? : ",
+    "error_not_enough_money": "Error : not enough money in bank, quitting\n",
+    "switching_deck": "Switching deck, please wait...\n",
+    "press_enter": "Press enter to continue...",
+    "dealer": "Dealer : ",
+    "player": "Player : ",
+    "what_to_do": "WHAT TO DO ? (H)it, (C)heck : ",
+    "play_again": "Wanna play again fella ? (Y/n) : ",
+    "unknown_command": "Commande inconnue, veuillez réessayer"
+  }
+}

@@ -1,12 +1,12 @@
 CC 	= gcc
 CFLAGS 	= -Wall -Wextra -g
-LDFLAGS = -lssl -lcrypto
+LDFLAGS = -lssl -lcrypto -lcjson
 
 
 all: blackjack init_money
 
-blackjack: main.o term.o func.o saveload.o deck.o player.o
-	$(CC) $(CFLAGS) -o blackjack main.o term.o func.o saveload.o deck.o player.o $(LDFLAGS)
+blackjack: main.o term.o func.o saveload.o deck.o player.o language.o
+	$(CC) $(CFLAGS) -o blackjack main.o term.o func.o saveload.o deck.o player.o language.o $(LDFLAGS)
 
 init_money: init_money.o saveload.o
 	$(CC) $(CFLAGS) -o init_money init_money.o saveload.o $(LDFLAGS)
@@ -28,6 +28,9 @@ deck.o: deck.c deck.h
 
 player.o: player.c player.h
 	$(CC) $(CFLAGS) -c player.c -o player.o
+
+language.o: language.c language.h
+	$(CC) $(CFLAGS) -c language.c -o language.o
 
 saveload.o: save_load.c save_load.h
 	$(CC) $(CFLAGS) -c save_load.c -o saveload.o

@@ -7,6 +7,7 @@
 #include "term_functions.h"
 #include "functions.h"
 #include "save_load.h"
+#include "language.h"
 
 #define LIGNE_DEBUG_ERROR 10
 
@@ -48,6 +49,8 @@ void start_game(void) {
 int main() {
     _init_signal();
     srand(time(NULL));
+    
+    init_languages();
 
     char *fname = "./blackjack_bank";
     if (!load_encrypted(fname, &money)) {
@@ -73,15 +76,21 @@ int main() {
         case 's':
             start_game();
             break;
+        case 'L':
+        case 'l':
+            menu_lang();
+            break;
         case 'q':
             break;
         default:
-            puts("Commande inconnue, veuillez réessayer");
+            Language_Pack* lang = get_language_pack();
+            puts(lang->game_unknown_command);
             break;
         }
     }
 
     term_restore();
     save_encrypted(fname, &money, sizeof(money));
+    cleanup_languages();
     return 0;
 }
