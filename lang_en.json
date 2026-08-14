@@ -24,5 +24,16 @@
     "what_to_do": "WHAT TO DO ? (H)it, (C)heck : ",
     "play_again": "Wanna play again fella ? (Y/n) : ",
     "unknown_command": "Unknown command, please try again"
+  },
+  "init_money": {
+    "early_leave": "\nAlright as you want, see ya !\n",
+    "bank_already_exist": "Your bank already exists, but seems empty... you poor bastard.\n Would you like to fill it with 100 WHOLE DOLLARS ? (y/n)\n-> ",
+    "file_already_exist": "File already exists but there's money on it...\n",
+    "bank_doesnt_exist": "Your bank doesn't exist... Should we create it and add 100 dollars ? (y/n)\n-> ",
+    "bank_loaded": "There's %d$ in your bank (that's... good). \nWe can reset it, if you want... would you like to add those juicy 100$ instead ? (y/n)\n-> ",
+    "bankrupt": "We'll go bankrupt with this one...\n",
+    "added_to_bank": "-- %d$ in your blackjack bank\n",
+    "your_call": "You're call...",
+    "bye": "See ya !"
   }
 }

@@ -1,4 +1,3 @@
-#include "deck.h"
 #include "term_functions.h"
 #include "functions.h"
 #include "player.h"
@@ -35,7 +34,7 @@ void init_display(int avail_money) {
 
 void init_display_game(int avail_money, Deck* deck) {
     init_display(avail_money);
-    term_move(MENU_LIGNE_DECK,  1); printf("Deck (%d cards left)\n", deck->nb_cards);
+    update_deck_card_nb(deck->nb_cards);
 }
 
 
@@ -56,6 +55,9 @@ void menu(char *selection, int avail_money) {
         term_flush();
         input = getchar();
         while (input == '\n' || input == '\r') {
+            term_move(MENU_LIGNE_INPUT, 1);
+            printf("%s", lang->menu_selection);
+            term_flush();
             input = getchar();
         }
     } while (input == EOF);
@@ -71,7 +73,8 @@ void help() {
     Language_Pack* lang = get_language_pack();
     term_move(1,1); printf("%s\n", lang->help_title);
     printf("%s\n", lang->help_rules_line1);
-    printf("\n%s\n", lang->help_press_enter);
+    printf("\n%s", lang->help_press_enter);
+    term_flush();
     getchar();
     term_clear();
 }
@@ -79,8 +82,7 @@ void help() {
 
 void update_deck_card_nb(int card_nb) {
     Language_Pack* lang = get_language_pack();
-    term_move(DECK_LINE,  1); printf("\n");
-    printf(lang->game_deck_info, card_nb);
+    term_move(DECK_LINE, 1); printf(lang->game_deck_info, card_nb);
 }
 
 void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand) {
@@ -118,15 +120,11 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
     term_clear();
     init_display(*money);
     update_deck_card_nb(deck->nb_cards);
-    //Card test_card = getRandomCard(deck);
-    //char* cardString = toStringCard(test_card.value, test_card.suit);
-    //printf("Took a card ! : (value : %d, suit : %d) and string form : %s", test_card.value, test_card.suit, cardString);
-    //free(cardString);
      
     term_move(INDICATION_LINE,1); printf("%s", lang->game_press_enter);
     term_flush();
 
-    // Dealer turns
+    // Dealers turn
     Card pulled_card = getRandomCard(deck);
     term_move(DEALER_LINE,1);
     add_card_entity(pulled_card, dealer_cards, &nb_dealer_card);
@@ -149,7 +147,7 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
 
     term_move(WHATTODO_LINE,1);
     printf("\n%s", lang->game_what_to_do); move = term_getchar();
-    while (move == 'H')
+    while (move == 'H' && deck->nb_cards > 45)
     {
         term_clear_line(WHATTODO_LINE);
         wait_keypress();
@@ -160,49 +158,43 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
         term_move(WHATTODO_LINE,1);
         printf("\n%s", lang->game_what_to_do); move = term_getchar();
     }
-    
-
-
-    
 
     term_move(INDICATION_LINE,1); printf("%s", lang->game_play_again); play_again = term_getchar();
     return play_again;
 }
 
 void start(int* money) {
+    Language_Pack* lang = get_language_pack();
     char play_again = 'y';
     int bet;
     Deck deck;
     createDeck(&deck);
-    
-
-    
 
     while (play_again != 'n' && deck.nb_cards > 45) {
-        Language_Pack* lang = get_language_pack();
         init_display_game(*money, &deck);
-	    term_move(MENU_LIGNE_INPUT, 1); printf("%s", lang->game_how_much_bet);
-	    scanf("%d", &bet);
+        term_move(MENU_LIGNE_INPUT, 1); printf("%s", lang->game_how_much_bet);
+        term_flush();
+        scanf("%d", &bet);
         wait_keypress();
 
         if (bet > 0 && bet <= *money) {
             play_again = bj_round(&bet, money, &deck);
         }
-
         else { 
-            Language_Pack* lang = get_language_pack();
-            printf("\n%s", lang->game_error_not_enough_money); sleep(2); play_again = 'n'; 
+            printf("\n%s", lang->game_error_not_enough_money);
+            term_flush();
+            sleep(2);
+            play_again = 'n'; 
         }
-    
     }
 
     if (play_again != 'n') {
-        Language_Pack* lang = get_language_pack();
-	printf("\n%s", lang->game_switching_deck); sleep(3);
-	createDeck(&deck);
-	start(money);
+        printf("\n%s", lang->game_switching_deck);
+        term_flush();
+        sleep(3);
+        createDeck(&deck);
+        start(money);
     }
-
 }
 
 

@@ -34,6 +34,17 @@ typedef struct {
     const char *game_what_to_do;
     const char *game_play_again;
     const char *game_unknown_command;
+    
+    // Init Money
+    const char *init_money_early_leave;
+    const char *init_money_bank_already_exist;
+    const char *init_money_file_already_exist;
+    const char *init_money_bank_doesnt_exist;
+    const char *init_money_bank_loaded;
+    const char *init_money_bankrupt;
+    const char *init_money_added_to_bank;
+    const char *init_money_your_call;
+    const char *init_money_bye;
 } Language_Pack;
 
 // Global variable

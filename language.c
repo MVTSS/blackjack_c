@@ -1,4 +1,5 @@
 #include "language.h"
+#include "config.h"
 #include "term_functions.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,6 +96,20 @@ static void populate_language_pack(Language_Pack *pack, cJSON *json) {
         pack->game_play_again = json_get_string(game, "play_again", "");
         pack->game_unknown_command = json_get_string(game, "unknown_command", "");
     }
+    
+    // Init Money section
+    cJSON *init_money = cJSON_GetObjectItemCaseSensitive(json, "init_money");
+    if (init_money) {
+        pack->init_money_early_leave = json_get_string(init_money, "early_leave", "");
+        pack->init_money_bank_already_exist = json_get_string(init_money, "bank_already_exist", "");
+        pack->init_money_file_already_exist = json_get_string(init_money, "file_already_exist", "");
+        pack->init_money_bank_doesnt_exist = json_get_string(init_money, "bank_doesnt_exist", "");
+        pack->init_money_bank_loaded = json_get_string(init_money, "bank_loaded", "");
+        pack->init_money_bankrupt = json_get_string(init_money, "bankrupt", "");
+        pack->init_money_added_to_bank = json_get_string(init_money, "added_to_bank", "");
+        pack->init_money_your_call = json_get_string(init_money, "your_call", "");
+        pack->init_money_bye = json_get_string(init_money, "bye", "");
+    }
 }
 
 void init_languages(void) {
@@ -144,10 +159,10 @@ void menu_lang(void) {
     
     switch (input) {
         case '1':
-            set_language(ENGLISH);
+            set_language_in_config(ENGLISH);
             break;
         case '2':
-            set_language(FRENCH);
+            set_language_in_config(FRENCH);
             break;
         default:
             // Default to current language

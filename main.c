@@ -8,6 +8,7 @@
 #include "functions.h"
 #include "save_load.h"
 #include "language.h"
+#include "config.h"
 
 #define LIGNE_DEBUG_ERROR 10
 
@@ -51,6 +52,8 @@ int main() {
     srand(time(NULL));
     
     init_languages();
+    load_config();
+    set_language(get_language_from_config());
 
     char *fname = "./blackjack_bank";
     if (!load_encrypted(fname, &money)) {
@@ -92,5 +95,6 @@ int main() {
     term_restore();
     save_encrypted(fname, &money, sizeof(money));
     cleanup_languages();
+    cleanup_config();
     return 0;
 }
