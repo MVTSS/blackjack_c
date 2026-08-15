@@ -75,7 +75,7 @@ void help() {
     printf("%s\n", lang->help_rules_line1);
     printf("\n%s", lang->help_press_enter);
     term_flush();
-    getchar();
+    getchar(); getchar();
     term_clear();
 }
 
@@ -103,7 +103,7 @@ int nb_dealer_card = 0;
 char player_cards[64] = "";
 int nb_player_card = 0;
 
-static void reset_round_state(void) {
+void reset_round_state(void) {
     Language_Pack* lang = get_language_pack();
     snprintf(dealer_cards, sizeof(dealer_cards), "%s", lang->game_dealer);
     snprintf(player_cards, sizeof(player_cards), "%s", lang->game_player);
@@ -164,13 +164,13 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
 }
 
 void start(int* money) {
-    Language_Pack* lang = get_language_pack();
     char play_again = 'y';
     int bet;
     Deck deck;
     createDeck(&deck);
 
     while (play_again != 'n' && deck.nb_cards > 45) {
+        Language_Pack* lang = get_language_pack();
         init_display_game(*money, &deck);
         term_move(MENU_LIGNE_INPUT, 1); printf("%s", lang->game_how_much_bet);
         term_flush();
@@ -181,6 +181,7 @@ void start(int* money) {
             play_again = bj_round(&bet, money, &deck);
         }
         else { 
+            Language_Pack* lang = get_language_pack();
             printf("\n%s", lang->game_error_not_enough_money);
             term_flush();
             sleep(2);
@@ -189,6 +190,7 @@ void start(int* money) {
     }
 
     if (play_again != 'n') {
+        Language_Pack* lang = get_language_pack();
         printf("\n%s", lang->game_switching_deck);
         term_flush();
         sleep(3);

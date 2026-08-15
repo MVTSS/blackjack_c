@@ -1,12 +1,14 @@
 {
   "menu": {
+    "early_leave": "Argent en banque : %d$\n",
     "title": "=== MATIS' BLACKJACK ===",
     "available_money": "Argent disponible : %d$",
     "start_game": "S: Commencer une partie",
     "help": "H: Menu d'aide",
     "quit": "q: Quitter",
     "change_lang": "l: Changer la langue",
-    "selection": "Sélection : "
+    "selection": "Sélection : ",
+    "bye": "A la prochaine !"
   },
   "help": {
     "title": "=== RÈGLES DU BLACKJACK ===",
@@ -35,5 +37,8 @@
     "added_to_bank": "-- %d$ ont été ajouté dans ta banque\n",
     "your_call": "C'est toi qui vois...",
     "bye": "Salut !"
+  },
+  "error": {
+    "cant_load_file": "Erreur : Impossible de charger l'argent disponible. Tu devrais utiliser le script 'init_money' avant de jouer ici."
   }
 }

@@ -1,5 +1,6 @@
 #include "language.h"
 #include "config.h"
+#include "json_manipulation.h"
 #include "term_functions.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,49 +16,6 @@ Language_Pack english_pack = {0};
 static cJSON *french_json = NULL;
 static cJSON *english_json = NULL;
 
-// Helper function to load JSON from file
-static cJSON* load_json_file(const char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (!file) {
-        fprintf(stderr, "Warning: Could not open file %s\n", filename);
-        return NULL;
-    }
-    
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    
-    char *buffer = (char *)malloc(size + 1);
-    if (!buffer) {
-        fprintf(stderr, "Error: Could not allocate memory\n");
-        fclose(file);
-        return NULL;
-    }
-    
-    fread(buffer, 1, size, file);
-    buffer[size] = '\0';
-    fclose(file);
-    
-    cJSON *json = cJSON_Parse(buffer);
-    free(buffer);
-    
-    if (!json) {
-        fprintf(stderr, "Warning: Invalid JSON in %s\n", filename);
-        return NULL;
-    }
-    
-    return json;
-}
-
-// Helper function to safely extract string from JSON
-static const char* json_get_string(cJSON *obj, const char *key, const char *default_value) {
-    cJSON *item = cJSON_GetObjectItemCaseSensitive(obj, key);
-    if (cJSON_IsString(item) && item->valuestring) {
-        return item->valuestring;
-    }
-    return default_value;
-}
-
 // Function to populate Language_Pack from JSON
 static void populate_language_pack(Language_Pack *pack, cJSON *json) {
     if (!json) return;
@@ -65,6 +23,7 @@ static void populate_language_pack(Language_Pack *pack, cJSON *json) {
     // Menu section
     cJSON *menu = cJSON_GetObjectItemCaseSensitive(json, "menu");
     if (menu) {
+        pack->menu_early_leave = json_get_string(menu, "early_leave", "");
         pack->menu_title = json_get_string(menu, "title", "");
         pack->menu_available_money = json_get_string(menu, "available_money", "");
         pack->menu_start_game = json_get_string(menu, "start_game", "");
@@ -72,6 +31,7 @@ static void populate_language_pack(Language_Pack *pack, cJSON *json) {
         pack->menu_quit = json_get_string(menu, "quit", "");
         pack->menu_change_lang = json_get_string(menu, "change_lang", "");
         pack->menu_selection = json_get_string(menu, "selection", "");
+        pack->menu_bye = json_get_string(menu, "bye", "");
     }
     
     // Help section
@@ -110,11 +70,17 @@ static void populate_language_pack(Language_Pack *pack, cJSON *json) {
         pack->init_money_your_call = json_get_string(init_money, "your_call", "");
         pack->init_money_bye = json_get_string(init_money, "bye", "");
     }
-}
 
+    // Error section
+    cJSON *error = cJSON_GetObjectItemCaseSensitive(json, "error");
+    if (error) {
+        pack->error_cant_load_file = json_get_string(error, "cant_load_file", "");
+    }
+}
+    
 void init_languages(void) {
-    french_json = load_json_file("lang_fr.json");
-    english_json = load_json_file("lang_en.json");
+    french_json = json_load_file("lang_fr.json");
+    english_json = json_load_file("lang_en.json");
     
     populate_language_pack(&french_pack, french_json);
     populate_language_pack(&english_pack, english_json);
@@ -169,5 +135,6 @@ void menu_lang(void) {
             break;
     }
     
+    wait_keypress();
     term_clear();
 }

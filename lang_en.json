@@ -1,12 +1,14 @@
 {
   "menu": {
+    "early_leave": "Money in bank : %d$\n",
     "title": "=== MATIS' BLACKJACK ===",
     "available_money": "Available money : %d$",
     "start_game": "S: Start a game",
     "help": "H: Help menu",
     "quit": "q: Quit",
     "change_lang": "l: Change language",
-    "selection": "Selection : "
+    "selection": "Selection : ",
+    "bye": "See you soon !"
   },
   "help": {
     "title": "=== BLACKJACK RULES ===",
@@ -26,7 +28,7 @@
     "unknown_command": "Unknown command, please try again"
   },
   "init_money": {
-    "early_leave": "\nAlright as you want, see ya !\n",
+    "early_leave_init_money": "\nAlright as you want, see ya !\n",
     "bank_already_exist": "Your bank already exists, but seems empty... you poor bastard.\n Would you like to fill it with 100 WHOLE DOLLARS ? (y/n)\n-> ",
     "file_already_exist": "File already exists but there's money on it...\n",
     "bank_doesnt_exist": "Your bank doesn't exist... Should we create it and add 100 dollars ? (y/n)\n-> ",
@@ -35,5 +37,8 @@
     "added_to_bank": "-- %d$ in your blackjack bank\n",
     "your_call": "You're call...",
     "bye": "See ya !"
+  },
+  "error": {
+    "cant_load_file": "Error : Can't load your money? You should use the script 'init_money' before doing anything here."
   }
 }

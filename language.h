@@ -10,6 +10,7 @@ typedef enum {
 
 typedef struct {
     // Menu
+    const char *menu_early_leave;
     const char *menu_title;
     const char *menu_available_money;
     const char *menu_start_game;
@@ -17,6 +18,7 @@ typedef struct {
     const char *menu_quit;
     const char *menu_change_lang;
     const char *menu_selection;
+    const char *menu_bye;
     
     // Help
     const char *help_title;
@@ -45,6 +47,10 @@ typedef struct {
     const char *init_money_added_to_bank;
     const char *init_money_your_call;
     const char *init_money_bye;
+    
+    // Error
+    const char *error_cant_load_file;
+
 } Language_Pack;
 
 // Global variable
