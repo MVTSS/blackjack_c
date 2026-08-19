@@ -1,5 +1,6 @@
 blackjack
 blackjack_bank
 init_money
+config.json
 *.o
 

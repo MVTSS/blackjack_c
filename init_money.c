@@ -6,12 +6,13 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "save_load.h"
-
+#include "language.h"
 
 
 void redirect(int signum) { // si Ctrl + C pour sortir
     if (signum == SIGINT) {
-        puts("\nAlright as you want, see ya !");
+        Language_Pack* lang = get_language_pack();
+        printf("%s", lang->init_money_early_leave);
         exit(0);
     }
 }
@@ -19,6 +20,7 @@ void redirect(int signum) { // si Ctrl + C pour sortir
 
 
 int main() {
+    Language_Pack* lang = get_language_pack();
     struct sigaction act;
     memset(&act,0,sizeof(act));
     act.sa_handler = redirect;
@@ -34,16 +36,16 @@ int main() {
         if (stat(fname, &stat_record)) { perror("Error stat"); return -1; }
         if (stat_record.st_size <= 1)
         {
-            printf("Your bank already exists, but seems empty... you poor bastard.\n Would you like to fill it with 100 WHOLE DOLLARS ? (y/n)\n-> ");
+            printf("%s", lang->init_money_bank_already_exist);
         } else
         {
-            printf("File already exists but there's money on it...\n");
+            printf("%s", lang->init_money_file_already_exist);
             contain_data = 1;
         }
         
 
     } else {
-        printf("Your bank doesn't exist... Should we create it and add 100 dollars ? (y/n)\n-> ");
+        printf("%s", lang->init_money_bank_doesnt_exist);
     }
 
 
@@ -53,7 +55,7 @@ int main() {
     if (contain_data)
     {
         load_encrypted(fname, &loaded_money);
-        printf("There's %d$ in your bank (that's... good). \nWe can reset it, if you want... would you like to add those juicy 100$ instead ? (y/n)\n-> ", loaded_money);
+        printf(lang->init_money_bank_loaded, loaded_money);
     }
     
 
@@ -63,18 +65,18 @@ int main() {
     {
     case 'Y':
     case 'y':
-        printf("We'll go bankrupt with this one...\n");
+        printf("%s", lang->init_money_bankrupt);
         save_encrypted(fname, &init_money, sizeof(init_money));
         load_encrypted(fname, &loaded_money);
-        printf("-- %d$ in your blackjack bank\n", loaded_money);
+        printf(lang->init_money_added_to_bank, loaded_money);
         break;
     
     default:
-        puts("You're call...");
+        printf("%s\n", lang->init_money_your_call);
         puts("-- Money NOT added");
         break;
     }
 
-    puts("See you !");
+    printf("%s", lang->init_money_bye);
     return 0;
 }

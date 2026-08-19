@@ -1,0 +1,44 @@
+{
+  "menu": {
+    "early_leave": "Argent en banque : %d$\n",
+    "title": "=== MATIS' BLACKJACK ===",
+    "available_money": "Argent disponible : %d$",
+    "start_game": "S: Commencer une partie",
+    "help": "H: Menu d'aide",
+    "quit": "q: Quitter",
+    "change_lang": "l: Changer la langue",
+    "selection": "Sélection : ",
+    "bye": "A la prochaine !"
+  },
+  "help": {
+    "title": "=== RÈGLES DU BLACKJACK ===",
+    "rules_line1": "1. Blablabla bla\nblablablabla blablabla blabla blablabla\nblabla blablabla blablablablablabla blablabla blablabla blabla\nblablabla blablablabla blabla blablablabla blablabla blabla\nblablabla blablablabla blabla blabla blabla\nblablabla blablabla blabla blablablabla blablabla blabla\nblablabla blablablabla blabla blabla\nblablabla bla blablablabla blablabla blabla",
+    "press_enter": "Appuyer sur entrer pour retourner au menu..."
+  },
+  "game": {
+    "deck_info": "Deck (%d cartes restantes)\n",
+    "how_much_bet": "Combien veux-tu parier ? : ",
+    "error_not_enough_money": "Erreur : pas assez d'argent en bank, arrêt...\n",
+    "switching_deck": "Changement de deck, attendez...\n",
+    "press_enter": "Appuyer sur entrer pour continuer...",
+    "dealer": "Dealer : ",
+    "player": "Joueur : ",
+    "what_to_do": "QUE FAIRE ? (H)it, (C)heck : ",
+    "play_again": "Tu veux encore jouer ? (Y/n) : ",
+    "unknown_command": "Commande inconnue, veuillez réessayer"
+  },
+  "init_money": {
+    "early_leave": "Ok comme tu veux, salut !\n",
+    "bank_already_exist": "Ta banque existe déjà mais t'es pauvre... Est-ce que tu veux que jte prête 100 DOLLARS ? (y/n)\n-> ",
+    "file_already_exist": "Le fichier existe déjà, mais y'a déjà de l'argent dedans...\n",
+    "bank_doesnt_exist": "Ta banque n'existe pas... Tu veux qu'on y ajoute 100$ dedans ? (y/n)\n-> ",
+    "bank_loaded": "Il y a %d$ dans ta banque (c'est déjà pas mal...)\nOn peut réinitialliser ça si tu veux, et rajouter 100$ à la place. Tu veux ? (y/n)\n-> ",
+    "bankrupt": "On va faire faillite avec toi...\n",
+    "added_to_bank": "-- %d$ ont été ajouté dans ta banque\n",
+    "your_call": "C'est toi qui vois...",
+    "bye": "Salut !"
+  },
+  "error": {
+    "cant_load_file": "Erreur : Impossible de charger l'argent disponible. Tu devrais utiliser le script 'init_money' avant de jouer ici."
+  }
+}
