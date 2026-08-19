@@ -17,28 +17,28 @@
   },
   "game": {
     "deck_info": "Deck (%d cards left)\n",
-    "how_much_bet": "How much do you wanna bet ? : ",
+    "how_much_bet": "How much do you want bet ? : ",
     "error_not_enough_money": "Error : not enough money in bank, quitting\n",
     "switching_deck": "Switching deck, please wait...\n",
     "press_enter": "Press enter to continue...",
     "dealer": "Dealer : ",
     "player": "Player : ",
-    "what_to_do": "WHAT TO DO ? (H)it, (C)heck : ",
-    "play_again": "Wanna play again fella ? (Y/n) : ",
+    "what_to_do": "What do you want to do next ? (H)it, (C)heck : ",
+    "play_again": "Want to play again ? (Y/n) : ",
     "unknown_command": "Unknown command, please try again"
   },
   "init_money": {
-    "early_leave_init_money": "\nAlright as you want, see ya !\n",
-    "bank_already_exist": "Your bank already exists, but seems empty... you poor bastard.\n Would you like to fill it with 100 WHOLE DOLLARS ? (y/n)\n-> ",
+    "early_leave_init_money": "\nSee you soon !\n",
+    "bank_already_exist": "Your bank already exists, but seems empty...\n Would you like to fill it with 100$ ? (y/n)\n-> ",
     "file_already_exist": "File already exists but there's money on it...\n",
-    "bank_doesnt_exist": "Your bank doesn't exist... Should we create it and add 100 dollars ? (y/n)\n-> ",
-    "bank_loaded": "There's %d$ in your bank (that's... good). \nWe can reset it, if you want... would you like to add those juicy 100$ instead ? (y/n)\n-> ",
+    "bank_doesnt_exist": "Your bank doesn't exist... Should we create it and add 100$ ? (y/n)\n-> ",
+    "bank_loaded": "There's %d$ in your bank. \nWe can reset it, if you want... would you like to add those juicy 100$ instead ? (y/n)\n-> ",
     "bankrupt": "We'll go bankrupt with this one...\n",
     "added_to_bank": "-- %d$ in your blackjack bank\n",
     "your_call": "You're call...",
     "bye": "See ya !"
   },
   "error": {
-    "cant_load_file": "Error : Can't load your money? You should use the script 'init_money' before doing anything here."
+    "cant_load_file": "Error : Can't load your money. You should use the script 'init_money' before doing anything here."
   }
 }

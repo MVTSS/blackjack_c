@@ -23,6 +23,7 @@ typedef struct {
     // int nb_hands;
     
     char hand_string[64];
+    int nb_card_player;
 
     // Maybe useful when there will be multiplayer, depends on how to implement
     int money;
