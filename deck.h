@@ -13,7 +13,6 @@ typedef struct {
     int value;      
     int bj_value;
     Suit suit;
-    int is_visible;
 } Card;
 
 typedef struct {
@@ -22,7 +21,6 @@ typedef struct {
 } Deck;
 
 void createDeck(Deck* deck);
-void turnCard(Card* carte);
 void removeCard(Deck* deck, int index);
 Card getRandomCard(Deck* deck);
 

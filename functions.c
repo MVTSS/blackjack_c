@@ -22,7 +22,7 @@
 #define DEALER_LINE 6
 #define PLAYER_LINE 8
 
-Player player;
+Player player1;
 Dealer dealer;
 
 void init_display(int avail_money) {
@@ -85,7 +85,7 @@ void update_deck_card_nb(int card_nb) {
     term_move(DECK_LINE, 1); printf(lang->game_deck_info, card_nb);
 }
 
-void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand) {
+void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand, int* score) {
     if (*nb_cards_in_hand == 0) {
         strcat(str_cards, toStringCard(c.value, c.suit));
     } else {
@@ -94,8 +94,12 @@ void add_card_entity(Card c, char* str_cards, int* nb_cards_in_hand) {
     }
 
     (*nb_cards_in_hand)++;
-    printf("%s\r", str_cards);
+
+    (*score) += c.bj_value;
+
+    printf("%s (%d)\r", str_cards, *score);
 }
+
 
 
 char dealer_cards[64] = "";
@@ -107,8 +111,11 @@ void reset_round_state(void) {
     Language_Pack* lang = get_language_pack();
     snprintf(dealer_cards, sizeof(dealer_cards), "%s", lang->game_dealer);
     snprintf(player_cards, sizeof(player_cards), "%s", lang->game_player);
-    nb_dealer_card = 0;
-    nb_player_card = 0;
+    player1.score_per_hand = 0;
+    dealer.score_hand = 0;
+    // Find a way to reset the string
+    // for(long unsigned int i=0; i<sizeof(player1.hand_string); i++) player1.hand_string[0] = "";
+    // for(long unsigned int i=0; i<sizeof(dealer.hand_string); i++) dealer.hand_string[0] = "";
 }
 
 char bj_round(int* round_bet, int* money, Deck* deck) {
@@ -127,21 +134,21 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
     // Dealers turn
     Card pulled_card = getRandomCard(deck);
     term_move(DEALER_LINE,1);
-    add_card_entity(pulled_card, dealer_cards, &nb_dealer_card);
+    add_card_entity(pulled_card, dealer.hand_string, &dealer.nb_card_dealer, &dealer.score_hand);
     update_deck_card_nb(deck->nb_cards);
     
     term_getchar();
 
     pulled_card = getRandomCard(deck);
     term_move(PLAYER_LINE,1);
-    add_card_entity(pulled_card, player_cards, &nb_player_card);
+    add_card_entity(pulled_card, player_cards, &nb_player_card, &player1.score_per_hand);
     update_deck_card_nb(deck->nb_cards);
 
     term_getchar();
 
     pulled_card = getRandomCard(deck);
     term_move(PLAYER_LINE,1);
-    add_card_entity(pulled_card, player_cards, &nb_player_card);
+    add_card_entity(pulled_card, player_cards, &nb_player_card, &player1.score_per_hand);
     update_deck_card_nb(deck->nb_cards);
 
 
@@ -153,7 +160,7 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
         wait_keypress();
         pulled_card = getRandomCard(deck);
         term_move(PLAYER_LINE,1);
-        add_card_entity(pulled_card, player_cards, &nb_player_card);
+        add_card_entity(pulled_card, player_cards, &nb_player_card, &player1.score_per_hand);
         update_deck_card_nb(deck->nb_cards);
         term_move(WHATTODO_LINE,1);
         printf("\n%s", lang->game_what_to_do); move = term_getchar();

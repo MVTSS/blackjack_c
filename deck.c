@@ -19,16 +19,10 @@ void createDeck(Deck *deck) {
                 deck->cards[index].bj_value = value;
 
             deck->cards[index].suit = suit;
-            deck->cards[index].is_visible = 0;
 
             index++;
         }
     }
-}
-
-
-void turnCard(Card *carte) {
-    carte->is_visible = !carte->is_visible;
 }
 
 void removeCard(Deck *deck, int index) {
