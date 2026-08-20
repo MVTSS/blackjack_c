@@ -3,6 +3,12 @@
 #include "player.h"
 #include "language.h"
 
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
+
+
 #define MENU_LIGNE_TITRE   1
 #define MENU_LIGNE_MONEY   2
 #define MENU_LIGNE_DECK    3
@@ -21,6 +27,9 @@
 #define DECK_LINE   3
 #define DEALER_LINE 6
 #define PLAYER_LINE 8
+
+#define MIN_NB_CARD_IN_DECK 10
+
 
 Player player1;
 Dealer dealer;
@@ -114,6 +123,16 @@ void reset_round_state(void) {
     dealer.nb_card_dealer = 0;
 }
 
+
+void take_card(Deck* deck, char* str_cards, int* nb_cards_in_hand, int* score, int line) {
+    Card pulled_card = getRandomCard(deck);
+    term_move(line,1);
+    add_card_entity(pulled_card, str_cards, nb_cards_in_hand, score);
+    update_deck_card_nb(deck->nb_cards);
+    
+}
+
+
 char bj_round(int* round_bet, int* money, Deck* deck) {
     char play_again;  
     char move;
@@ -128,50 +147,71 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
     term_flush();
 
     // Dealers turn
-    Card pulled_card = getRandomCard(deck);
-    term_move(DEALER_LINE,1);
-    add_card_entity(pulled_card, dealer.hand_string, &dealer.nb_card_dealer, &dealer.score_hand);
-    update_deck_card_nb(deck->nb_cards);
-    
+    take_card(deck, dealer.hand_string, &dealer.nb_card_dealer, &dealer.score_hand, DEALER_LINE);
     term_getchar();
-
-    pulled_card = getRandomCard(deck);
-    term_move(PLAYER_LINE,1);
-    add_card_entity(pulled_card, player1.hand_string, &player1.nb_card_player, &player1.score_per_hand);
-    update_deck_card_nb(deck->nb_cards);
-
+    take_card(deck, player1.hand_string, &player1.nb_card_player, &player1.score_per_hand, PLAYER_LINE);
     term_getchar();
+    take_card(deck, player1.hand_string, &player1.nb_card_player, &player1.score_per_hand, PLAYER_LINE);
 
-    pulled_card = getRandomCard(deck);
-    term_move(PLAYER_LINE,1);
-    add_card_entity(pulled_card, player1.hand_string, &player1.nb_card_player, &player1.score_per_hand);
-    update_deck_card_nb(deck->nb_cards);
 
 
     term_move(WHATTODO_LINE,1);
     printf("%s", lang->game_what_to_do); move = term_getchar();
-    while (move == 'H' && deck->nb_cards > 7 && player1.score_per_hand < 21)
+    while (move == 'H' && deck->nb_cards > MIN_NB_CARD_IN_DECK && player1.score_per_hand <= 21)
     {
         term_clear_line(WHATTODO_LINE);
         wait_keypress();
-        pulled_card = getRandomCard(deck);
-        term_move(PLAYER_LINE,1);
-        add_card_entity(pulled_card, player1.hand_string, &player1.nb_card_player, &player1.score_per_hand);
-        update_deck_card_nb(deck->nb_cards);
+        take_card(deck, player1.hand_string, &player1.nb_card_player, &player1.score_per_hand, PLAYER_LINE);
         if (player1.score_per_hand > 21) {
             term_clear_line(WHATTODO_LINE);
             term_clear_line(INDICATION_LINE);
             term_move(INDICATION_LINE, 1);
-            printf("Score too high ! You lost");
+            printf(ANSI_COLOR_RED "Score too high ! You lost ! -%d$" ANSI_COLOR_RESET, *round_bet);
             term_flush();
             sleep(2);
+            term_clear_line(INDICATION_LINE);
             break;
         }
         term_move(WHATTODO_LINE,1);
         printf("%s", lang->game_what_to_do); move = term_getchar();
     }
 
-
+    if (move == 'C')
+    {
+            term_clear_line(WHATTODO_LINE);
+            term_clear_line(INDICATION_LINE);
+            term_move(INDICATION_LINE, 1);
+            printf("Dealer's turn...");
+            term_flush();
+            sleep(2);
+            do {
+                take_card(deck, dealer.hand_string, &dealer.nb_card_dealer, &dealer.score_hand, DEALER_LINE);
+                sleep(1);
+            } while (dealer.score_hand < 17);
+            if (dealer.score_hand < player1.score_per_hand || dealer.score_hand > 21)
+            {
+                term_clear_line(INDICATION_LINE);
+                term_move(INDICATION_LINE, 1);
+                printf(ANSI_COLOR_GREEN "YOU WON !!!!! +%d$" ANSI_COLOR_RESET, *round_bet);
+                *money += 2*(*round_bet);
+                term_flush();
+                sleep(3);
+            } else if (dealer.score_hand == player1.score_per_hand) {
+                term_clear_line(INDICATION_LINE);
+                term_move(INDICATION_LINE, 1);
+                printf("TIE ! You keep your money");
+                *money += *round_bet;
+                term_flush();
+                sleep(3);
+            } else {
+                term_clear_line(INDICATION_LINE);
+                term_move(INDICATION_LINE, 1);
+                printf(ANSI_COLOR_RED "YOU LOST !!!!! -%d$" ANSI_COLOR_RESET, *round_bet);
+                term_flush();
+                sleep(3);
+            }
+    }
+    
 
     term_move(INDICATION_LINE,1); printf("%s", lang->game_play_again); play_again = term_getchar();
     return play_again;
@@ -184,7 +224,7 @@ void start(int* money) {
 
     createDeck(&deck);
 
-    while (play_again != 'n' && deck.nb_cards > 45) {
+    while (play_again != 'n' && deck.nb_cards > MIN_NB_CARD_IN_DECK) {
         Language_Pack* lang = get_language_pack();
         init_display_game(*money, &deck);
         term_move(MENU_LIGNE_INPUT, 1); printf("%s", lang->game_how_much_bet);
@@ -193,6 +233,7 @@ void start(int* money) {
         wait_keypress();
 
         if (bet > 0 && bet <= *money) {
+            player1.bet = *money;
             play_again = bj_round(&bet, money, &deck);
         }
         else { 

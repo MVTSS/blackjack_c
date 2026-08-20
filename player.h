@@ -11,7 +11,7 @@
 typedef struct {
     Card cards[12]; // Theorical max
     int nb_cards;
-    int bet;
+    // int bet;
 } Hand;
 
 typedef struct {
@@ -27,6 +27,7 @@ typedef struct {
 
     // Maybe useful when there will be multiplayer, depends on how to implement
     int money;
+    int bet;
 } Player;
 
 typedef struct {

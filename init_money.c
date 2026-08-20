@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include "save_load.h"
 #include "language.h"
+#include "config.h"
 
 
 void redirect(int signum) { // si Ctrl + C pour sortir
@@ -20,6 +21,10 @@ void redirect(int signum) { // si Ctrl + C pour sortir
 
 
 int main() {
+    init_languages();
+    load_config();
+    set_language(get_language_from_config());
+
     Language_Pack* lang = get_language_pack();
     struct sigaction act;
     memset(&act,0,sizeof(act));
