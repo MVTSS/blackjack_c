@@ -1,8 +1,9 @@
 # Matis' Blackjack
 
 Petit projet de jeu de blackjack en C jouable dans le terminal (TUI).
+Fait en parallèle avec l'IA en tant qu'outil et non en tant que solution.
 
-Pour ambition de pouvoir jouer à plusieurs via des sessions TMUX, puis via self-hosted server.
+Ce jeu a pour ambition de pouvoir jouer à plusieurs via des sessions TMUX, puis via self-hosted server.
 
 ## Installation
 
