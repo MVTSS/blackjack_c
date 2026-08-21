@@ -7,8 +7,6 @@
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-
-
 #define MENU_LIGNE_TITRE   1
 #define MENU_LIGNE_MONEY   2
 #define MENU_LIGNE_DECK    3
@@ -18,11 +16,8 @@
 #define MENU_LIGNE_LANG    7
 #define MENU_LIGNE_INPUT   9
 
-
-
 #define WHATTODO_LINE   10
 #define INDICATION_LINE 12
-
 
 #define DECK_LINE   3
 #define DEALER_LINE 6
@@ -33,7 +28,6 @@
 
 Player player1;
 Dealer dealer;
-
 
 void init_display(int avail_money) {
     term_clear();
@@ -166,7 +160,9 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
             term_clear_line(WHATTODO_LINE);
             term_clear_line(INDICATION_LINE);
             term_move(INDICATION_LINE, 1);
-            printf(ANSI_COLOR_RED "Score too high ! You lost ! -%d$" ANSI_COLOR_RESET, *round_bet);
+            printf("%s", ANSI_COLOR_RED);
+            printf(lang->game_score_too_high, *round_bet);
+            printf("%s", ANSI_COLOR_RESET);
             term_flush();
             sleep(2);
             term_clear_line(INDICATION_LINE);
@@ -192,21 +188,25 @@ char bj_round(int* round_bet, int* money, Deck* deck) {
             {
                 term_clear_line(INDICATION_LINE);
                 term_move(INDICATION_LINE, 1);
-                printf(ANSI_COLOR_GREEN "YOU WON !!!!! +%d$" ANSI_COLOR_RESET, *round_bet);
+                printf("%s", ANSI_COLOR_GREEN);
+                printf(lang->game_you_won, *round_bet);
+                printf("%s", ANSI_COLOR_RESET);
                 *money += 2*(*round_bet);
                 term_flush();
                 sleep(3);
             } else if (dealer.score_hand == player1.score_per_hand) {
                 term_clear_line(INDICATION_LINE);
                 term_move(INDICATION_LINE, 1);
-                printf("TIE ! You keep your money");
+                printf("%s", lang->game_tie);
                 *money += *round_bet;
                 term_flush();
                 sleep(3);
             } else {
                 term_clear_line(INDICATION_LINE);
                 term_move(INDICATION_LINE, 1);
-                printf(ANSI_COLOR_RED "YOU LOST !!!!! -%d$" ANSI_COLOR_RESET, *round_bet);
+                printf("%s", ANSI_COLOR_RED);
+                printf(lang->game_you_lost, *round_bet);
+                printf("%s", ANSI_COLOR_RESET);
                 term_flush();
                 sleep(3);
             }
@@ -235,6 +235,8 @@ void start(int* money) {
         if (bet > 0 && bet <= *money) {
             player1.bet = *money;
             play_again = bj_round(&bet, money, &deck);
+        } else if (bet == 0) {
+            break;
         }
         else { 
             Language_Pack* lang = get_language_pack();
@@ -245,7 +247,7 @@ void start(int* money) {
         }
     }
 
-    if (play_again != 'n') {
+    if (play_again != 'n' && bet != 0) {
         Language_Pack* lang = get_language_pack();
         printf("\n%s", lang->game_switching_deck);
         term_flush();

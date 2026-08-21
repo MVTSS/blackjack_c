@@ -25,6 +25,10 @@
     "player": "Player : ",
     "what_to_do": "What do you want to do next ? (H)it, (C)heck : ",
     "play_again": "Want to play again ? (Y/n) : ",
+    "score_too_high": "Score too high ! You lost ! -%d$",
+    "tie": "TIE ! You keep your money",
+    "you_won": "YOU WON !!!!! +%d$",
+    "you_lost": "YOU LOST !!!!! -%d$",
     "unknown_command": "Unknown command, please try again"
   },
   "init_money": {

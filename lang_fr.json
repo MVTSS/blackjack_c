@@ -25,6 +25,10 @@
     "player": "Joueur : ",
     "what_to_do": "QUE FAIRE ? (H)it, (C)heck : ",
     "play_again": "Tu veux encore jouer ? (Y/n) : ",
+    "score_too_high": "Score trop haut ! Tu as perdu ! -%d$",
+    "tie": "Égalité ! Tu gardes ton argent",
+    "you_won": "TU AS GAGNÉ !!!",
+    "you_lost": "TU AS PERDU !!!",
     "unknown_command": "Commande inconnue, veuillez réessayer"
   },
   "init_money": {

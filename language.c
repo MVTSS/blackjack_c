@@ -54,6 +54,10 @@ static void populate_language_pack(Language_Pack *pack, cJSON *json) {
         pack->game_player = json_get_string(game, "player", "");
         pack->game_what_to_do = json_get_string(game, "what_to_do", "");
         pack->game_play_again = json_get_string(game, "play_again", "");
+        pack->game_score_too_high = json_get_string(game, "score_too_high", "");
+        pack->game_tie = json_get_string(game, "tie", "");
+        pack->game_you_won = json_get_string(game, "you_won", "");
+        pack->game_you_lost = json_get_string(game, "you_lost", "");
         pack->game_unknown_command = json_get_string(game, "unknown_command", "");
     }
     

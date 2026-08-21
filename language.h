@@ -35,6 +35,10 @@ typedef struct {
     const char *game_player;
     const char *game_what_to_do;
     const char *game_play_again;
+    const char *game_score_too_high;
+    const char *game_tie;
+    const char *game_you_won;
+    const char *game_you_lost;
     const char *game_unknown_command;
     
     // Init Money
